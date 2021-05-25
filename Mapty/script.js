@@ -10,7 +10,7 @@ class Workout {
   constructor(coords, duration, distance) {
     //this.date = ...
     //this.id = ...
-    this.coords = coords;
+    this.coords = coords; // [lat, lng]
     this.duration = duration; // in min
     this.distance = distance; // in km
   }
@@ -107,8 +107,8 @@ class App {
         this._loadMap.bind(this),
         function () {
           alert('Could not get your position');
-        },
-        { timeout: 1000 }
+        }
+        // { timeout: 1000 }
       );
   }
 
@@ -129,6 +129,7 @@ class App {
 
     // Handle click on Map
     this.#map.on('click', this._showForm.bind(this));
+    console.log(this.#map);
 
     this.#workouts.forEach(work => {
       this._renderWorkoutMarker(work);
@@ -215,7 +216,6 @@ class App {
 
     // Add new object to workout array
     this.#workouts.push(workout);
-    console.log(this.#workouts);
 
     // Render workout on map as marker
     this._renderWorkoutMarker(workout);
@@ -358,4 +358,31 @@ class App {
   }
 }
 
-const app = new App();
+function instruction() {
+  const instruction = document.querySelector('.instruction');
+  const insBtn = document.querySelector('.insBtn');
+  const arrow = document.querySelector('.arrow');
+
+  // show gray background div with z-index
+  instruction.classList.remove('hidden');
+
+  // create popup window to notify who wins and the game is over
+  const popUp = document.createElement('div');
+  popUp.classList.add('popUp');
+  popUp.innerHTML =
+    '<h2>Instruction</h2><p>Click on the map and input the running time and kilometer on the popup form.<p>';
+  instruction.appendChild(popUp);
+
+  // Detect enter key for window event listener
+  insBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    arrow.classList.toggle('bounceAlpha');
+    const app = new App();
+    instruction.classList.add('hidden');
+  });
+}
+
+instruction();
+
+// const app = new App();
